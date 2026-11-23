@@ -1,0 +1,10 @@
+airflowVersion: "3.1.8"
+executor: KubernetesExecutor
+config:
+  core:
+    dags_folder: /opt/airflow/pilot-dags
+dags:
+  persistence:
+    enabled: false
+  gitSync:
+    enabled: false

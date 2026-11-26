@@ -2,14 +2,29 @@
 
 [English guide](docs/operations-en.md) / [한국어 가이드](docs/operations-ko.md)
 
-Use one experiment with `items=10000` and `shards=1`. Run it once in each
-environment, in the order below. The required result is `333283335000`.
+Verify the baseline, reconciliation loop, TypeScript settlement, and
+mixed-language chain in E01 (local task processes), E02 (local Docker task
+containers), and E03 (existing Airflow on external Kubernetes). kind is an
+optional reproduction environment.
 
-- [x] Scaffold the Python 3.13 uv project, shared DAG, Typer script, comparison notebook, and deployment files.
-- [x] Verify the initial scaffold with Ruff, ty, and five offline tests. Render its Compose and Helm configurations and execute its notebook with mock responses.
-- [x] Document the single experiment and sequential rollout. Add centered English and Korean README navigation with the official Airflow logo.
-- [ ] Prepare the shared image with Apache Airflow 3.4.0. Update the Typer command to submit one DAG run per invocation and the notebook to read one explicit run ID per environment. Re-run the offline checks for the updated flow.
-- [ ] Start one local Airflow container with `airflow standalone`. Run the experiment once and record the run ID, terminal state, and result.
-- [ ] Load the same study image into kind and deploy Airflow with Helm chart 1.22.0. Run the experiment once, verify the task Pod, and record the result.
-- [ ] Deploy Airflow with the same Helm chart and study image on the agreed external Kubernetes context and namespace. Run the experiment once, verify the task Pod, and record the result.
-- [ ] Execute the Jupyter notebook with all three run IDs. Reconcile the API results with the CLI output and record the portability verdict.
+## Progress
+
+- [x] Run the four experiments in all three required environments and record
+  the results and execution isolation.
+- [ ] Reconcile all 12 run IDs with the recorded CLI evidence.
+- [x] Query the three current baseline run IDs in Jupyter and record the
+  passing verdict and observed durations. [Jupyter results](docs/results-en.md#jupyter-baseline-comparison)
+- [x] Run the baseline five times per environment with fixed inputs, verify each
+  run in Jupyter, and record the observed distribution and infrastructure context. [Five-run results](docs/results-en.md#five-run-baseline-comparison)
+- [x] Repeat reconciliation, TypeScript settlement, and the mixed-language chain
+  five times per environment. Record each verification and publish one chart per workflow.
+  [Repeated workflow results](docs/results-en.md#five-run-workflow-comparisons)
+- [x] Apply the E03 Node.js startup timeout through GitOps and rerun only
+  TypeScript settlement five times. [Cluster PR #426](https://github.com/jyje/cluster/pull/426) ·
+  [E03 retest](docs/results-en.md#e03-retest-after-the-nodejs-timeout-change)
+- [x] Audit task attempts, archive runs with errors, and replenish each
+  timing series to five clean samples. Regenerate the comparison charts.
+
+[Status matrix](README-en.md#verification-matrix) ·
+[Run evidence (English)](docs/results-en.md) ·
+[실행 근거 (한국어)](docs/results-ko.md)

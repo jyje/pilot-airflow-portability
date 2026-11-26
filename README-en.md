@@ -17,7 +17,7 @@
 
 - [Deployment and verification guide](docs/operations-en.md) for the environment setup, experiment input, and pass criteria.
 - [E03 task Pod placement](docs/e03-node-placement-en.md).
-- [Plan](PLAN-en.md) for remaining work and completion criteria.
+- [Plan](PLAN-en.md) for the verification scope and completion record.
 - [Experiment script](src/scripts/experiment.py) and [comparison notebook](src/notebooks/01-compare-airflow.ipynb).
 
 ## Execution scenarios

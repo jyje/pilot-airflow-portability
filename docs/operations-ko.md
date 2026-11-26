@@ -2,7 +2,7 @@
 
 [English](operations-en.md) / [한국어](operations-ko.md) / [시나리오별 실행기 동작](executors-ko.md)
 
-남은 작업은 [진행 계획](../PLAN-en.md), 실제 실행 근거는 [검증 결과](results-ko.md)에서 확인할 수 있습니다.
+검증 범위와 완료 기록은 [진행 계획](../PLAN-en.md), 실제 실행 근거는 [검증 결과](results-ko.md)에서 확인할 수 있습니다.
 
 ## 실험별 통과 기준
 

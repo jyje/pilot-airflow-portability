@@ -11,7 +11,8 @@ optional reproduction environment.
 
 - [x] Run the four experiments in all three required environments and record
   the results and execution isolation.
-- [ ] Reconcile all 12 run IDs with the recorded CLI evidence.
+- [x] Reconcile all 12 run IDs with the recorded CLI evidence.
+  [Verification matrix](docs/results-en.md#verification-matrix)
 - [x] Query the three current baseline run IDs in Jupyter and record the
   passing verdict and observed durations. [Jupyter results](docs/results-en.md#jupyter-baseline-comparison)
 - [x] Run the baseline five times per environment with fixed inputs, verify each

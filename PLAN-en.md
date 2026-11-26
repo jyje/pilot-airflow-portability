@@ -24,6 +24,8 @@ optional reproduction environment.
   [E03 retest](docs/results-en.md#e03-retest-after-the-nodejs-timeout-change)
 - [x] Audit task attempts, archive runs with errors, and replenish each
   timing series to five clean samples. Regenerate the comparison charts.
+- [x] Collect 50 first-attempt reconciliation runs in each of E01, E02, and
+  E03. Report the dedicated series with spread, mean uncertainty, and exclusions.
 
 [Status matrix](README-en.md#verification-matrix) ·
 [Run evidence (English)](docs/results-en.md) ·

@@ -91,6 +91,43 @@ DAG start-to-end interval. All five observations per environment are included.
 | 5 | E02 | `pilot-6b96b0bdaa484270b1766b003b4cb6e9` | 10.320 |
 | 5 | E03 | `pilot-24012e1a89cf42c8befc470864662f77` | 47.603 |
 
+## Reconciliation loop with 50 samples per environment
+
+The dedicated series collected 50 first-attempt successes each in E01, E02,
+and E03. A run passed when all 14 task instances succeeded on their first
+attempt and the final XCom reported 23 processed records and backlog
+23 → 15 → 7 → 0. Durations measure Airflow DAG start to end. The E01 and E02
+series alternated on their shared Docker host. E03 ran sequentially on
+external Kubernetes while the local series progressed independently.
+All three loaded DAG source files had the same SHA-256. Idle pilot
+containers were stopped partway through the local series. The sample
+data records which services had stopped at the start and during each run.
+The earlier five-run comparison is recorded separately below.
+
+The box covers Q1 to Q3 and the line marks the median. The diamond marks
+the mean and the whiskers span the observed minimum and maximum. The 95%
+interval for the mean uses 10,000 bootstrap resamples within each
+environment and treats individual runs as independent.
+
+![Reconciliation loop duration summary across E01, E02, and E03](images/reconciliation-50-duration-summary.png)
+
+*Infrastructure resources differ. E01 and E02 share local Docker resources
+and E03 uses external Kubernetes nodes. Timings include the effect of each
+environment's configuration, resources, and scheduling.*
+
+| Environment | Accepted / attempts | Min (s) | Q1 (s) | Median (s) | Q3 (s) | Mean (s) | 95% mean CI (s) | Max (s) |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | ---: |
+| E01 | 50 / 50 | 15.319 | 19.560 | 22.433 | 31.043 | 36.788 | 27.222 to 50.253 | 280.747 |
+| E02 | 50 / 50 | 35.546 | 56.892 | 70.158 | 127.658 | 112.364 | 86.548 to 144.506 | 699.572 |
+| E03 | 50 / 50 | 200.085 | 206.799 | 211.564 | 216.688 | 212.324 | 210.386 to 214.334 | 231.656 |
+
+The exception log is empty because no attempts were excluded.
+First-attempt successes are included regardless of duration.
+
+[Timing samples](data/reconciliation-50-samples.jsonl) ·
+[Exception log](data/reconciliation-50-exceptions.jsonl) ·
+[Jupyter notebook](../src/notebooks/03-compare-reconciliation.ipynb)
+
 ## Five-run workflow comparisons
 
 Each environment and workflow has **five first-attempt samples**. All 45

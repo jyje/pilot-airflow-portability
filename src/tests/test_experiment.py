@@ -1,32 +1,31 @@
 import json
 
 import httpx
+import pytest
 from typer.testing import CliRunner
 
 from scripts import experiment
 
 
-def test_matrix_and_mismatched_result(monkeypatch):
-    triggered = []
+@pytest.mark.parametrize(("total", "expected_exit"), [("14", 0), ("0", 1)])
+def test_run_submits_once(monkeypatch, total, expected_exit):
+    submitted = []
 
     def connect(target: str) -> httpx.Client:
-        runs = {}
+        assert target == "local"
 
         def handler(request: httpx.Request) -> httpx.Response:
             if request.method == "POST":
-                trigger = json.loads(request.content)
-                triggered.append((target, trigger["conf"]))
-                runs[trigger["dag_run_id"]] = trigger["conf"]
+                submitted.append(json.loads(request.content))
                 return httpx.Response(200, json={})
             if request.url.path.endswith("return_value"):
-                return httpx.Response(200, json={"value": "0"})
-            run_id = request.url.path.rsplit("/", 1)[-1]
+                return httpx.Response(200, json={"value": total})
             return httpx.Response(
                 200,
                 json={
-                    "dag_run_id": run_id,
+                    "dag_run_id": submitted[0]["dag_run_id"],
                     "state": "success",
-                    "conf": runs[run_id],
+                    "conf": submitted[0]["conf"],
                 },
             )
 
@@ -41,22 +40,37 @@ def test_matrix_and_mismatched_result(monkeypatch):
             "run",
             "--target",
             "local",
-            "--target",
-            "kind",
             "--items",
-            "1",
-            "--items",
-            "2",
+            "4",
             "--shards",
-            "2",
-            "--repeat",
             "2",
         ],
     )
-    assert result.exit_code == 1
-    assert "Experiment group:" in result.stderr
-    assert len(triggered) == 8
-    results = [json.loads(line) for line in result.stdout.splitlines()]
-    assert len(results) == 8
-    assert {entry["environment"] for entry in results} == {"local", "kind"}
-    assert sum(entry["matches"] for entry in results) == 4
+    assert result.exit_code == expected_exit
+    assert len(submitted) == 1
+    assert submitted[0]["conf"] == {"items": 4, "shards": 2}
+    assert json.loads(result.stdout)["matches"] is (expected_exit == 0)
+
+
+def test_inspect_uses_defaults_for_ui_run_and_never_submits(monkeypatch):
+    run_id = "manual__2026-11-23T12:00:00+00:00"
+
+    def handler(request: httpx.Request) -> httpx.Response:
+        assert request.method == "GET"
+        if request.url.path.endswith("return_value"):
+            return httpx.Response(200, json={"value": "333283335000"})
+        assert request.url.path.endswith(run_id)
+        return httpx.Response(200, json={"dag_run_id": run_id, "state": "success", "conf": {}})
+
+    monkeypatch.setattr(
+        experiment.airflow_api,
+        "connect",
+        lambda _: httpx.Client(
+            base_url="https://airflow.example/api/v2/", transport=httpx.MockTransport(handler)
+        ),
+    )
+    result = CliRunner().invoke(
+        experiment.app, ["inspect", "--target", "local", "--run-id", run_id]
+    )
+    assert result.exit_code == 0
+    assert json.loads(result.stdout)["matches"] is True

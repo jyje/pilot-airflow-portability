@@ -26,7 +26,7 @@ def test_run_contract():
     with httpx.Client(
         base_url="https://airflow.example/airflow/api/v2/", transport=httpx.MockTransport(handler)
     ) as client:
-        airflow_api.trigger(client, run["dag_run_id"], 4, 2)
+        airflow_api.trigger(client, run["dag_run_id"], {"items": 4, "shards": 2})
         completed = airflow_api.wait_for_run(client, run["dag_run_id"], 1, 0.1)
         result = airflow_api.collect(client, "local", completed)
 
@@ -37,29 +37,18 @@ def test_run_contract():
     assert result["matches"] is True
 
 
-def test_list_filters_other_groups_and_paginates():
-    offsets = []
+def test_get_run_preserves_special_characters_and_does_not_write():
+    run_id = "manual__2026-11-23T12:00:00+00:00"
 
     def handler(request: httpx.Request) -> httpx.Response:
-        offsets.append(request.url.params["offset"])
-        assert request.url.params["run_id_pattern"] == "pilot-matrix-"
-        run_id = "pilot-matrix-4-2-1" if offsets[-1] == "0" else "other-pilot-matrix-4-2-2"
-        return httpx.Response(
-            200,
-            json={
-                "dag_runs": [{"dag_run_id": run_id}],
-                "total_entries": 2,
-            },
-        )
+        assert request.method == "GET"
+        assert request.url.raw_path.endswith(b"manual__2026-11-23T12%3A00%3A00%2B00%3A00")
+        return httpx.Response(200, json={"dag_run_id": run_id})
 
     with httpx.Client(
         base_url="https://airflow.example/api/v2/", transport=httpx.MockTransport(handler)
     ) as client:
-        assert list(airflow_api.list_runs(client, "matrix")) == [
-            {"dag_run_id": "pilot-matrix-4-2-1"}
-        ]
-
-    assert offsets == ["0", "1"]
+        assert airflow_api.get_run(client, run_id) == {"dag_run_id": run_id}
 
 
 def test_failed_run_does_not_query_xcom():

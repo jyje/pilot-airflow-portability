@@ -1,0 +1,16 @@
+{
+  "name": "pilot-airflow-typescript-dag",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsc && airflow-ts-pack reconcile.ts --outfile settlement.min.mjs"
+  },
+  "dependencies": {
+    "@apache-airflow/ts-sdk": "1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2"
+  }
+}

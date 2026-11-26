@@ -1,4 +1,6 @@
-airflowVersion: "3.1.8"
+airflowVersion: "3.4.0"
+defaultAirflowRepository: apache/airflow
+defaultAirflowTag: "3.4.0"
 executor: KubernetesExecutor
 config:
   core:
@@ -8,3 +10,12 @@ dags:
     enabled: false
   gitSync:
     enabled: false
+volumes:
+  - name: pilot-dags
+    configMap:
+      name: airflow-pilot-dags
+volumeMounts:
+  - name: pilot-dags
+    mountPath: /opt/airflow/pilot-dags/portability.py
+    subPath: portability.py
+    readOnly: true

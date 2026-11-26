@@ -2,8 +2,8 @@
 
 [English](operations-en.md) / [한국어](operations-ko.md) / [Executor behavior](executors-en.md)
 
-See the [plan](../PLAN-en.md) for remaining work and the [results](results-en.md)
-for live verification evidence.
+See the [plan](../PLAN-en.md) for the verification scope and completion record,
+and the [results](results-en.md) for live verification evidence.
 
 ## Experiment pass criteria
 

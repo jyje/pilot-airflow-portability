@@ -22,11 +22,11 @@
 
 ## 실행 시나리오
 
-| 시나리오 | 작업 환경 | Executor | Operator (TaskFlow) | 경로 |
-| --- | --- | --- | --- | --- |
-| E01 | 로컬 Docker, 태스크 프로세스 | [`LocalExecutor`](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/local.html) | `PythonOperator(@task)` | [`deploy/local/run.sh`](deploy/local/run.sh) |
-| E02 | 단일 Docker 호스트, 태스크별 임시 컨테이너 | `LocalExecutor` | [`DockerOperator(@task.docker)`](https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html) | [`deploy/local/run-docker-task.sh`](deploy/local/run-docker-task.sh) |
-| E03 | 외부 Kubernetes의 기존 Airflow, 태스크별 Pod | [`KubernetesExecutor`](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/kubernetes_executor.html) | `PythonOperator(@task)` | [`src/scripts/experiment.py`](src/scripts/experiment.py) |
+| 시나리오 | 작업 환경 | Executor | Operator (TaskFlow) |
+| --- | --- | --- | --- |
+| [E01](deploy/local/run.sh) | 로컬 Docker, 태스크 프로세스 | [`LocalExecutor`](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/local.html) | `PythonOperator(@task)` |
+| [E02](deploy/local/run-docker-task.sh) | 단일 Docker 호스트, 태스크별 임시 컨테이너 | `LocalExecutor` | [`DockerOperator(@task.docker)`](https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html) |
+| [E03](src/scripts/experiment.py) | 외부 Kubernetes의 기존 Airflow, 태스크별 Pod | [`KubernetesExecutor`](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/kubernetes_executor.html) | `PythonOperator(@task)` |
 
 Operator는 기준 DAG의 예시입니다. [kind + Helm](deploy/kind/)은 검증 표 외의 선택 재현 환경입니다.
 

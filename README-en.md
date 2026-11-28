@@ -22,11 +22,11 @@
 
 ## Execution scenarios
 
-| Scenario | Work environment | Executor | Operator (TaskFlow) | Path |
-| --- | --- | --- | --- | --- |
-| E01 | Local Docker, task subprocess | [`LocalExecutor`](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/local.html) | `PythonOperator(@task)` | [`deploy/local/run.sh`](deploy/local/run.sh) |
-| E02 | Single Docker host, temporary container per task | `LocalExecutor` | [`DockerOperator(@task.docker)`](https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html) | [`deploy/local/run-docker-task.sh`](deploy/local/run-docker-task.sh) |
-| E03 | Existing Airflow on external Kubernetes, Pod per task | [`KubernetesExecutor`](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/kubernetes_executor.html) | `PythonOperator(@task)` | [`src/scripts/experiment.py`](src/scripts/experiment.py) |
+| Scenario | Work environment | Executor | Operator (TaskFlow) |
+| --- | --- | --- | --- |
+| [E01](deploy/local/run.sh) | Local Docker, task subprocess | [`LocalExecutor`](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/executor/local.html) | `PythonOperator(@task)` |
+| [E02](deploy/local/run-docker-task.sh) | Single Docker host, temporary container per task | `LocalExecutor` | [`DockerOperator(@task.docker)`](https://airflow.apache.org/docs/apache-airflow-providers-docker/stable/_api/airflow/providers/docker/operators/docker/index.html) |
+| [E03](src/scripts/experiment.py) | Existing Airflow on external Kubernetes, Pod per task | [`KubernetesExecutor`](https://airflow.apache.org/docs/apache-airflow-providers-cncf-kubernetes/stable/kubernetes_executor.html) | `PythonOperator(@task)` |
 
 Operator examples describe the baseline. [kind with Helm](deploy/kind/) is an optional reproduction environment outside the verification matrix.
 
